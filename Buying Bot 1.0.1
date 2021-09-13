@@ -1,0 +1,187 @@
+import tkinter as tk
+from tkinter import *
+from PIL import ImageTk, Image
+from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
+import time
+
+root = Tk()
+# Makes Canvas for User Interface
+canvas = tk.Canvas(root, width=800, height=570)
+canvas.grid(columnspan=3, rowspan=3)
+#title
+root.title("5 2-GO | PS5 BUYING BOT | Amazon Edition")  # Label
+#icon
+root.iconbitmap("pslogo.ico")
+#logo
+logo = Image.open("ps5.png")
+logo = ImageTk.PhotoImage(logo)
+logo_label = tk.Label(image=logo)
+logo_label.image = logo
+logo_label.grid(column=1, row=0)
+#Direction for login
+Amazon_label = tk.Label(root, text='Insert Amazon Username and Password', font=('calibre', 10, 'bold')).place(x=280,
+                                                                                                              y=230)
+
+# Entry Box for Login and Password
+name_var = tk.StringVar()
+passw_var = tk.StringVar()
+
+
+
+# creating a label for
+# name using widget Label
+name_label = tk.Label(root, text='Username', font=('calibre', 10, 'bold')).place(x=367, y=260)
+
+# creating a entry for input
+# name using widget Entry
+name_entry = tk.Entry(root, textvariable=name_var, font=('calibre', 10, 'normal'))
+
+# creating a label for password input
+passw_label = tk.Label(root, text='Password', font=('calibre', 10, 'bold')).place(x=368, y=300)
+
+# creating a entry for password input also keeps password secure by replacing password with "******"
+passw_entry = tk.Entry(root, textvariable=passw_var, font=('calibre', 10, 'normal'), show='*').place(x=330, y=320)
+
+name_entry.grid(row=0, column=1)
+
+# instructions
+instructions = tk.Label(root, text="SELECT EITHER PS5 OR PS5 DIGITAL EDITION", font="Raleway")
+instructions.grid(columnspan=3, column=0, row=1)
+
+# PS5 button
+PS5_text = tk.StringVar()
+PS5_btn = tk.Button(root, textvariable=PS5_text, command=lambda: PS5_Click(), font="Raleway", bg="#39439e", fg="white",
+                    height=2, width=15).place(x=160, y=500)
+PS5_text.set("PS5")
+
+# If PS5 is Clicked on UI do this
+def PS5_Click():
+    user1 = name_var.get()
+    password1 = passw_var.get()
+    name_var.set("")
+    passw_var.set("")
+
+    PS5_text.set("Loading PS5...")
+    PS5_text.set("PS5")
+    # Find Chromedriver.exe
+    PATH = "C:\Program Files (x86)\Five 2-GO PS5 BUYING BOT Amazon ONLY\chromedriver.exe"
+    driver: WebDriver = webdriver.Chrome(PATH)
+    # Uses chrome to access chromedriver to access amazon.com
+    Item_I_Want_To_Buy_PS5 = "https://www.amazon.com/PlayStation-5-Console/dp/B08FC5L3RG/ref=sr_1_2?dchild=1&keywords=ps5&qid=1630628969&s=videogames&sr=1-2"
+
+    driver.get(Item_I_Want_To_Buy_PS5)
+
+    BuyButton = False
+
+    while not BuyButton:
+
+        try:
+            # If this activates the buy button is not there yet
+            AddToCartButton = CartButton = driver.find_element_by_id("buybox-see-all-buying-choices")
+            print("Button May Not Be Available")
+            # Refresh Page after 5 seconds
+            time.sleep(5)
+            driver.refresh()
+
+        except:
+
+            AddToCartButton = CartButton = driver.find_element_by_id("add-to-cart-button").click()
+            print("PS5 Available!!!!! Check My Orders on Amazon")
+            BuyButton = True
+            #Waits 5 Seconds
+            time.sleep(5)
+
+    # goes to amazon shopping cart
+    driver.get('https://www.amazon.com/gp/cart/view.html?ref_=nav_cart')
+
+    # insert UserName
+    UserName = user1
+    Password = password1
+    # clicks the check out button
+    driver.find_element_by_class_name("a-button-inner").click()
+    # fines Username textbox
+    text_area = driver.find_element_by_name("email")
+    # inputs Username
+    text_area.send_keys(UserName)
+    # clicks continue
+    driver.find_element_by_id("continue").click()
+    # finds Password textbox
+    text_area = driver.find_element_by_name("password")
+    # inputs Password
+    text_area.send_keys(Password)
+    # clicks Signs in
+    driver.find_element_by_id("signInSubmit").click()
+    # Buys PlayStation 5 and closes software
+    driver.find_element_by_name("placeYourOrder1").click()
+    exit()
+
+
+# PS5 Digital Edition button
+PS5_Digital_Edition_text = tk.StringVar()
+PS5_Digital_Edition_btn = tk.Button(root, textvariable=PS5_Digital_Edition_text,
+                                    command=lambda: PS5_Digital_Edition_Click(), font="Raleway", bg="#39439e",
+                                    fg="white", height=2, width=15).place(x=490, y=500)
+PS5_Digital_Edition_text.set("PS5 Digital Edition")
+
+# If PS5 DE on UI is Clicked do this
+def PS5_Digital_Edition_Click():
+    user1 = name_var.get()
+    password1 = passw_var.get()
+    name_var.set("")
+    passw_var.set("")
+    PS5_Digital_Edition_text.set("Loading PS5 DE...")
+    #Find Chromedriver.exe
+    PATH = "C:\Program Files (x86)\Five 2-GO PS5 BUYING BOT Amazon ONLY\chromedriver.exe"
+    driver: WebDriver = webdriver.Chrome(PATH)
+    # Uses chrome to access chromedriver to access amazon.com
+    Item_I_Want_To_Buy_PS5 = "https://www.amazon.com/PlayStation-5-Digital/dp/B08FC6MR62/ref=sr_1_7?dchild=1&keywords=ps5+digital&qid=1631487022&sr=8-7"
+
+    driver.get(Item_I_Want_To_Buy_PS5)
+
+    BuyButton = False
+
+    while not BuyButton:
+
+        try:
+            # If this activates the buy button is not there yet
+            AddToCartButton = CartButton = driver.find_element_by_id("outOfStock")
+            print("Button May Not Be Available")
+            # Refresh Page after 5 seconds
+            time.sleep(5)
+            driver.refresh()
+
+        except:
+            # If this activates the buy button is there!!! Yay PS5!!!
+            AddToCartButton = CartButton = driver.find_element_by_id("add-to-cart-button").click()
+            print("PS5 Available!!!!! Check My Orders on Amazon")
+            BuyButton = True
+            #Waits 5 Seconds
+            time.sleep(5)
+
+    # goes to amazon shopping cart
+    driver.get('https://www.amazon.com/gp/cart/view.html?ref_=nav_cart')
+
+    # insert UserName
+    UserName = user1
+    Password = password1
+    # clicks the check out button
+    driver.find_element_by_class_name("a-button-inner").click()
+    # fines Username textbox
+    text_area = driver.find_element_by_name("email")
+    # inputs Username
+    text_area.send_keys(UserName)
+    # clicks continue
+    driver.find_element_by_id("continue").click()
+    # finds Password textbox
+    text_area = driver.find_element_by_name("password")
+    # inputs Password
+    text_area.send_keys(Password)
+    # Clicks Signs in
+    driver.find_element_by_id("signInSubmit").click()
+    # Buys PlayStation 5 and closes software
+    driver.find_element_by_name("placeYourOrder1").click()
+    exit()
+
+
+root.mainloop()
